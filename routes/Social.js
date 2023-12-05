@@ -24,7 +24,7 @@ router.post('/addFriend', async (req, res) => {
                     continue;
                 } 
                 else {
-                    return res.status(200).json({ error: 'Already Added' });
+                    return res.status(200).json({ success: `Request status ${elem.status}` });
                 }
             }            
             userToAdd.friends.push({ userId: user._id });
