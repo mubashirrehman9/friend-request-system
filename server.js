@@ -2,7 +2,6 @@ const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-app.use(express.urlencoded({extended: false}));
 // Importing Routes
 const userRoute = require('./routes/User')
 const socialRoute = require('./routes/Social')
