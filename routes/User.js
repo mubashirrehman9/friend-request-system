@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
         });
 });
 // GetUserProfile
-router.post('/getUserProfile', (req, res) => {
+router.post('/getFriends', (req, res) => {
     const { username } = req.body;
 
     // Find the user by username
@@ -78,7 +78,7 @@ router.post('/getUserProfile', (req, res) => {
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            return res.status(200).json({ user });
+            return res.status(200).json({"firends": user.friends});
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);
