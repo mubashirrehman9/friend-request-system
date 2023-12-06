@@ -118,7 +118,7 @@ router.post('/blockUser', async (req, res) => {
         const user = await User.findOne({ username: self })
         const userToBlock = await User.findOne({ username: username })
         if(self == username){
-            return res.status(200).json({ message: 'cant block yourself' });
+            return res.status(200).json({ message: 'Cant block yourself' });
         }
         for (let i = 0; i < user.friends.length; i++) {
             const friend = user.friends[i];
@@ -139,6 +139,32 @@ router.post('/blockUser', async (req, res) => {
         user.friends.push({ "userId": user._id, status: "blocked" })
         await user.save();
         return res.status(200).json({ message: 'User blocked' });
+    }
+    catch {
+        return res.status(500).json({ message: 'Internal Server Error' });
+    };
+});
+router.post('/unblockUser', async (req, res) => {
+    try {
+        const { self, username } = req.body;
+        // Find the user by username
+        const user = await User.findOne({ username: self })
+        const userToUnblock = await User.findOne({ username: username })
+        if(self == username){
+            return res.status(400).json({ message: 'Cant unblock yourself' });
+        }
+        for (let i = 0; i < user.friends.length; i++) {
+            const friend = user.friends[i];
+            if (friend.userId.equals(userToUnblock.id)) {
+                if (friend.status == "blocked") {
+                    user.friends.pop(friend);
+                    await user.save();
+                    return res.status(200).json({ message: 'User removed from blocklist' });
+                }
+            }
+        }
+        return res.status(200).json({ message: 'Cant unblock' });
+
     }
     catch {
         return res.status(500).json({ message: 'Internal Server Error' });
