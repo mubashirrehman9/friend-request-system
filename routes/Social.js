@@ -170,7 +170,7 @@ router.post('/unblockUser', async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     };
 });
-router.get('/findFriend', async (req, res) => {
+router.get('/searchUser', async (req, res) => {
     try {
         const { self, username } = req.body;
         const userToFind = await User.findOne({ username: username })
@@ -186,7 +186,7 @@ router.get('/findFriend', async (req, res) => {
             if (blockedusers.includes(self)) {
                 return res.status(404).json({ exists: false });
             } else {
-                return res.status(200).json({ exists: true });
+                return res.status(200).json({ user: username });
             }
         }
     }
