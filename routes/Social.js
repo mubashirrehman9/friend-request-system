@@ -170,7 +170,7 @@ router.post('/unblockUser', async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     };
 });
-router.get('/findFriend', async (req, res) => {
+router.get('/searchUser', async (req, res) => {
     try {
         const { self, username } = req.body;
         const userToFind = await User.findOne({ username: username })
