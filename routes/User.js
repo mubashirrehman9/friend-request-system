@@ -12,7 +12,7 @@ router.post('/register', (req, res) => {
     bcrypt.hash(password, 10, (err, hashedPassword) => {
         if (err) {
             console.error('Error hashing password:', err);
-            return res.status(500).json({ error: 'Internal Server Error' });
+            return res.status(500).json({ message: 'Internal Server Error' });
         }
 
         // Create a new user
@@ -28,7 +28,7 @@ router.post('/register', (req, res) => {
             })
             .catch((saveErr) => {
                 console.error('Error saving user:', saveErr);
-                return res.status(400).json({ error: 'Registration failed' });
+                return res.status(400).json({ message: 'Registration failed' });
             });
 
     });
@@ -42,14 +42,14 @@ router.post('/login', (req, res) => {
     User.findOne({ username })
         .then((user) => {
             if (!user) {
-                return res.status(404).json({ error: 'User not found' });
+                return res.status(404).json({ message: 'User not found' });
             }
 
             // Compare the provided password with the hashed password stored in the database
             bcrypt.compare(password, user.password)
                 .then((match) => {
                     if (!match) {
-                        return res.status(401).json({ error: 'Invalid credentials' });
+                        return res.status(401).json({ message: 'Invalid credentials' });
                     }
 
                     // Store user object in the session
@@ -60,12 +60,12 @@ router.post('/login', (req, res) => {
                 })
                 .catch((compareErr) => {
                     console.error('Error comparing passwords:', compareErr);
-                    return res.status(500).json({ error: 'Internal Server Error' });
+                    return res.status(500).json({ message: 'Internal Server Error' });
                 });
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);
-            return res.status(500).json({ error: 'Internal Server Error' });
+            return res.status(500).json({ message: 'Internal Server Error' });
         });
 });
 // GetUserProfile
@@ -76,13 +76,13 @@ router.post('/getFriends', (req, res) => {
     User.findOne({ username })
         .then((user) => {
             if (!user) {
-                return res.status(404).json({ error: 'User not found' });
+                return res.status(404).json({ message: 'User not found' });
             }
             return res.status(200).json({"firends": user.friends});
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);
-            return res.status(500).json({ error: 'Internal Server Error' });
+            return res.status(500).json({ message: 'Internal Server message' });
         });
 });
 module.exports = router;
