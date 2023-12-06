@@ -68,21 +68,5 @@ router.post('/login', (req, res) => {
             return res.status(500).json({ message: 'Internal Server Error' });
         });
 });
-// GetUserProfile
-router.post('/getFriends', (req, res) => {
-    const { username } = req.body;
 
-    // Find the user by username
-    User.findOne({ username })
-        .then((user) => {
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            return res.status(200).json({"firends": user.friends});
-        })
-        .catch((findErr) => {
-            console.error('Error finding user:', findErr);
-            return res.status(500).json({ message: 'Internal Server message' });
-        });
-});
 module.exports = router;
