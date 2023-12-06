@@ -186,7 +186,7 @@ router.get('/searchUser', async (req, res) => {
             if (blockedusers.includes(self)) {
                 return res.status(404).json({ exists: false });
             } else {
-                return res.status(200).json({ user: username });
+                return res.status(200).json({ exists: true, user: username });
             }
         }
     }
