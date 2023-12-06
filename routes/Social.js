@@ -93,5 +93,25 @@ router.post('/cancelFriendRequest', async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     };
 })
-
+router.post('/deleteFriend', async (req, res) => {
+    try {
+        const { self, usernameToDelete } = req.body;
+        // Find the user by username
+        const user = await User.findOne({ username: self })
+        const userToDelete = await User.findOne({ username: usernameToDelete })
+        if (!user || !userToDelete) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        user.friends.forEach((elem) => {
+            if ((elem.userId.equals(userToDelete._id)) && (elem.status == "accepted")) {
+                user.friends.pop(elem);
+            }
+        });
+        user.save();
+        return res.status(200).json({ success: 'Friend Removed Successfully' });
+    }
+    catch {
+        return res.status(500).json({ error: 'Internal Server Error' });
+    };
+})
 module.exports = router;
