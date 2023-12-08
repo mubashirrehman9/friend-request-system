@@ -136,7 +136,7 @@ router.post('/blockUser', async (req, res) => {
                 }
             }
         }
-        user.friends.push({ "userId": user._id, status: "blocked" })
+        user.friends.push({ "userId": userToBlock._id, status: "blocked" })
         await user.save();
         return res.status(200).json({ message: 'User blocked' });
     }
@@ -170,7 +170,7 @@ router.post('/unblockUser', async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     };
 });
-router.get('/searchUser', async (req, res) => {
+router.post('/searchUser', async (req, res) => {
     try {
         const { self, username } = req.body;
         const userToFind = await User.findOne({ username: username })
@@ -194,7 +194,7 @@ router.get('/searchUser', async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     };
 })
-router.get('/getFriends', (req, res) => {
+router.post('/getFriends', (req, res) => {
     const { username } = req.body;
 
     // Find the user by username
@@ -205,15 +205,16 @@ router.get('/getFriends', (req, res) => {
             }
             var friendslist = utils.filterFriends(user.friends, "accepted")
             var friendsUsername = await utils.getUsernamesByIDs(friendslist);
-            console.log(friendsUsername);
-            return res.status(200).json({ "firends": friendsUsername });
+            var friendsUsernameWithOnlineStatus = await utils.getUsersOnlineStatus(friendsUsername);
+            console.log(friendsUsernameWithOnlineStatus);
+            return res.status(200).json({ "user": friendsUsernameWithOnlineStatus });
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);
             return res.status(500).json({ message: 'Internal Server message' });
         });
 });
-router.get('/getFriendRequests', (req, res) => {
+router.post('/getFriendRequests', (req, res) => {
     const { username } = req.body;
 
     // Find the user by username
@@ -231,7 +232,7 @@ router.get('/getFriendRequests', (req, res) => {
             return res.status(500).json({ message: 'Internal Server message' });
         });
 });
-router.get('/getBlocklist', (req, res) => {
+router.post('/getBlocklist', (req, res) => {
     const { username } = req.body;
 
     // Find the user by username
@@ -242,7 +243,7 @@ router.get('/getBlocklist', (req, res) => {
             }
             var blocklist = utils.filterFriends(user.friends, "blocked")
             var blockedusers = await utils.getUsernamesByIDs(blocklist);
-            return res.status(200).json({ "blocked": blockedusers });
+            return res.status(200).json({ "user": blockedusers });
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);

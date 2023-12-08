@@ -7,7 +7,7 @@ const path =require('node:path');
 const userRoute = require('./routes/User')
 const socialRoute = require('./routes/Social')
 const cors = require('cors'); // Import the 'cors' middleware
-
+const events = require('./messages/events')
 
 // Create the Express app
 const app = express();
@@ -15,7 +15,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
   secret: 'your-secret-key',
@@ -31,9 +31,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/test.html'));
 });
 
-io.on('connection', async (socket) => {
-  console.log("User Connected "+ socket.id);
-});
+events.IntializeSocketEvents(io)
 
 
 // Connect to MongoDB

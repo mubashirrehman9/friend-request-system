@@ -28,4 +28,21 @@ async function getUsernamesByIDs(ids) {
     }
     return usernames;
 }
-module.exports = { filterFriends , getUsernameByID, getUsernamesByIDs};
+
+async function setUserStatusOnline(username) {
+    const user = await User.findOne({ username: username })
+    user.online = true
+    await user.save();
+}
+async function getUsersOnlineStatus(usernames) {
+    var userStatuses = [];
+    for (let i = 0; i < usernames.length; i++) {
+        const username = usernames[i];
+        const user = await User.findOne({ username: username })
+        userStatuses.push({username: username, online: user.online});
+    }
+    console.log(userStatuses);
+    return userStatuses;
+}
+
+module.exports = { filterFriends , getUsernameByID, getUsernamesByIDs, setUserStatusOnline, getUsersOnlineStatus};
