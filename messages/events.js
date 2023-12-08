@@ -9,7 +9,18 @@ function IntializeSocketEvents(io) {
             await utils.setUserStatusOnline(username)
             sockets.push(socket.id);
             playersLookup[socket.id] = username;
-            console.log(playersLookup);
+        });
+        socket.on('inviteUser', async (self,username,conInfo) => {
+
+        
+        });
+        socket.on("disconnect", async () => {
+            if(playersLookup[socket.id]){
+                await utils.setUserStatusOffline(playersLookup[socket.id])
+                console.log("User " + (playersLookup[socket.id]) + "Disconnected" )
+            }else{
+                console.log("Client Disconnected" )
+            }
         });
     });
 }

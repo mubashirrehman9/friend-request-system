@@ -31,9 +31,21 @@ async function getUsernamesByIDs(ids) {
 
 async function setUserStatusOnline(username) {
     const user = await User.findOne({ username: username })
-    user.online = true
-    await user.save();
+    if (user){
+        user.online = true
+        await user.save();
+    }
 }
+
+async function setUserStatusOffline(username) {
+    const user = await User.findOne({ username: username })
+    if (user){
+        user.online = false
+        await user.save();
+    }
+}
+
+
 async function getUsersOnlineStatus(usernames) {
     var userStatuses = [];
     for (let i = 0; i < usernames.length; i++) {
@@ -45,4 +57,4 @@ async function getUsersOnlineStatus(usernames) {
     return userStatuses;
 }
 
-module.exports = { filterFriends , getUsernameByID, getUsernamesByIDs, setUserStatusOnline, getUsersOnlineStatus};
+module.exports = { filterFriends , getUsernameByID, getUsernamesByIDs, setUserStatusOnline, getUsersOnlineStatus, setUserStatusOffline};
