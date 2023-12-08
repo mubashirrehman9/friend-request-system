@@ -186,7 +186,8 @@ router.post('/searchUser', async (req, res) => {
             if (blockedusers.includes(self)) {
                 return res.status(404).json({ exists: false });
             } else {
-                return res.status(200).json({ exists: true, user: username });
+                var usernameOnlineStatus = await utils.getUsersOnlineStatus([username]);
+                return res.status(200).json({ exists: true, user: usernameOnlineStatus });
             }
         }
     }
@@ -245,10 +246,8 @@ router.post('/getBlocklist', (req, res) => {
             }
             var blocklist = utils.filterFriends(user.friends, "blocked")
             var blockedusers = await utils.getUsernamesByIDs(blocklist);
-            blockedusers.forEach((elem)=>{
-                blockeduserss.push({username: elem});
-            })
-            return res.status(200).json({ "user": blockeduserss });
+            blockedusersWithOnlineStatus = await utils.getUsersOnlineStatus(blockedusers)
+            return res.status(200).json({ "user": blockedusersWithOnlineStatus });
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);
