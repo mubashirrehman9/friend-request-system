@@ -215,7 +215,7 @@ router.post('/getFriends', (req, res) => {
 });
 router.post('/getFriendRequests', (req, res) => {
     const { username } = req.body;
-
+    var requestsUsernamess = []
     // Find the user by username
     User.findOne({ username })
         .then(async (user) => {
@@ -224,7 +224,10 @@ router.post('/getFriendRequests', (req, res) => {
             }
             var friendslist = utils.filterFriends(user.friends, "pending")
             var requestsUsernames = await utils.getUsernamesByIDs(friendslist);
-            return res.status(200).json({ "requests": requestsUsernames });
+            requestsUsernames.forEach((request)=>{
+                requestsUsernamess.push({username: request});
+            });
+            return res.status(200).json({ "users": requestsUsernamess });
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);
