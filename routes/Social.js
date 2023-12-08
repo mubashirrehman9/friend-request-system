@@ -206,7 +206,6 @@ router.post('/getFriends', (req, res) => {
             var friendslist = utils.filterFriends(user.friends, "accepted")
             var friendsUsername = await utils.getUsernamesByIDs(friendslist);
             var friendsUsernameWithOnlineStatus = await utils.getUsersOnlineStatus(friendsUsername);
-            console.log(friendsUsernameWithOnlineStatus);
             return res.status(200).json({ "user": friendsUsernameWithOnlineStatus });
         })
         .catch((findErr) => {
@@ -234,7 +233,7 @@ router.post('/getFriendRequests', (req, res) => {
 });
 router.post('/getBlocklist', (req, res) => {
     const { username } = req.body;
-
+    var blockeduserss = [];
     // Find the user by username
     User.findOne({ username })
         .then(async (user) => {
@@ -243,7 +242,10 @@ router.post('/getBlocklist', (req, res) => {
             }
             var blocklist = utils.filterFriends(user.friends, "blocked")
             var blockedusers = await utils.getUsernamesByIDs(blocklist);
-            return res.status(200).json({ "user": blockedusers });
+            blockedusers.forEach((elem)=>{
+                blockeduserss.push({username: elem});
+            })
+            return res.status(200).json({ "user": blockeduserss });
         })
         .catch((findErr) => {
             console.error('Error finding user:', findErr);
