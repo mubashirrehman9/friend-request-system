@@ -103,7 +103,14 @@ router.post('/deleteFriend', async (req, res) => {
             if ((elem.userId.equals(userToDelete._id)) && (elem.status == "accepted")) {
                 user.friends.pop(elem);
             }
+            userToDelete.friends.forEach((deletingUser)=>{
+                if(deletingUser.userId.equals(user.id)){
+                    userToDelete.friends.pop(deletingUser);
+                }
+
+            })
         });
+        userToDelete.save();
         user.save();
         return res.status(200).json({ message: 'Friend Removed Successfully' });
     }
@@ -124,7 +131,13 @@ router.post('/blockUser', async (req, res) => {
             const friend = user.friends[i];
             if (friend.userId.equals(userToBlock.id)) {
                 if (friend.status == "accepted") {
+                    userToBlock.friends.forEach((blockinguser)=>{
+                        if(blockinguser.userId.equals(user.id)){
+                            userToBlock.friends.pop(blockinguser);
+                        }
+                    });
                     friend.status = "blocked";
+                    await userToBlock.save();
                     await user.save();
                     return res.status(200).json({ message: 'User blocked' });
                 } else if (friend.status == "pending") {
