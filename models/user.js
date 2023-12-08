@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: String,
-  online: Boolean,
+  online: { type: Boolean, default: false },
   friends: [
     {
       userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
